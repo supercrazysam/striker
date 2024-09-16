@@ -1,0 +1,13 @@
+<launch>
+ 
+    <group>
+        <node pkg='joy' name='joy1' type='joy_node'/>
+    </group>
+    
+    <node name="striker"        pkg="striker"      type="striker_driver.py"/>
+    <node name="serial_node"        pkg="rosserial_python"      type="serial_node.py" output="screen">
+        <param name="port"              type="string"               value="/dev/mini_sloth"/>
+        <param name="baud"              type="int"                  value="115200"/>
+    </node>
+    
+</launch>
