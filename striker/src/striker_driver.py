@@ -48,15 +48,16 @@ class striker_joystick_handler(object):
 
         self.vx = self.vy = self.w = 0     
         
-        self.vx_max = 2.0
-        self.vy_max = 2.0
-        self.w_max  = 4.0
+        self.vx_max = 1.0
+        self.vy_max = 1.0
+        self.w_max  = 1.5
 
         ############
         self.command = Twist()    #TwistStamped
 
     def joy_callback(self, data):
         #right joystick
+        ''' #For Spektrum DX8e
         if data.axes[7]>0:   #for 8 channel
         #if data.axes[5]>0:   #0.7 = estop up (send command)   -0.7 = estop down (toggle safety estop, stop all action)
             
@@ -64,12 +65,13 @@ class striker_joystick_handler(object):
             self.vy = clip((data.axes[0] /  0.7) * self.vy_max,  -self.vy_max, self.vy_max)    # 0.707 forward max       -0.707 backward max
             self.w  = clip((data.axes[3] /  0.7) * self.w_max ,  -self.w_max , self.w_max )    # 0.707 left max         -0.707 right max
             self.last_command_time = rospy.Time.now()
-        else:
+        '''
 
-            self.vx = 0
-            self.vy = 0
-            self.w  = 0
-            self.last_command_time = rospy.Time.now()
+        #Xbox 360 wireless joystick controller
+        self.vx = clip((data.axes[4]  ) * self.vx_max,  -self.vx_max, self.vx_max)    # 0.707 forward max       -0.707 backward max
+        self.vy = clip((data.axes[3]  ) * self.vy_max,  -self.vy_max, self.vy_max)    # 0.707 forward max       -0.707 backward max
+        self.w  = clip((data.axes[0]  ) * self.w_max ,  -self.w_max , self.w_max )    # 0.707 left max         -0.707 right max
+        self.last_command_time = rospy.Time.now()            
 
 
                
